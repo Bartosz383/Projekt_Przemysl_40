@@ -14,14 +14,14 @@ def generate_data():
     timestamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())
     data = {
         "timestamp": timestamp,
-        "temperature": round(random.uniform(20.0, 25.0), 2),  # Temperatura
-        "humidity": round(random.uniform(30.0, 70.0), 2),  # Wilgotność
-        "pressure": round(random.uniform(950.0, 1050.0), 2),  # Ciśnienie
-        "light": round(random.uniform(100.0, 1000.0), 2),  # Natężenie światła
-        "sound": round(random.uniform(10.0, 100.0), 2),  # Poziom dźwięku
-        "motion": round(random.uniform(0.0, 10.0), 2),  # Ruch
-        "vibration": round(random.uniform(0.0, 5.0), 2),  # Drgania
-        "voltage": round(random.uniform(1.0, 5.0), 2),  # Napięcie
+        "temperature": round(random.uniform(20.0, 22.0), 2),  # Temperatura
+        "humidity": round(random.uniform(30.0, 35.0), 2),  # Wilgotność
+        "position": round(random.uniform(-950.0, 1050.0), 2),  # Położenie
+        "speed": round(random.uniform(100.0, 1000.0), 2),  # Prędkość
+        "acceleration": round(random.uniform(10.0, 100.0), 2),  # Przyspieszenie
+        "efficiency": round(random.uniform(0.0, 10.0), 2),  # Sprawność
+        "voltage": round(random.uniform(0.0, 5.0), 2),  # Napięcie
+        #"windspeed": round(random.uniform(0.0, 5.0), 2),  # Prędkość wiatru
     }
     return data
 

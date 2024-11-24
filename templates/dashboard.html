@@ -5,19 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Ogólny wygląd dla strony */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Styl dla menu bocznego */
+        .side-menu {
+            width: 200px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .side-menu button {
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+            width: 100%;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .side-menu button:hover {
+            background-color: #555;
+        }
+
+        /* Główna sekcja wykresów */
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* Styl dla wykresów */
+        canvas {
+            display: block;
+            margin: 20px 0;
+            width: 100%;
+            height: 400px;
+        }
+
+        /* Zmiana liczby kolumn na urządzeniach o mniejszym ekranie */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>IoT Dashboard</h1>
+    <div class="side-menu">
+        <h2>Projekt na Przemysł 4.0 Bartosz Kruszyński</h2>
+        <!-- Sekcja przycisków do włączania/wyłączania wykresów -->
+        <button onclick="toggleChart(0)">Temperature</button>
+        <button onclick="toggleChart(1)">Humidity</button>
+        <button onclick="toggleChart(2)">Position</button>
+        <button onclick="toggleChart(3)">Speed</button>
+        <button onclick="toggleChart(4)">Acceleration</button>
+        <button onclick="toggleChart(5)">Efficiency</button>
+        <button onclick="toggleChart(6)">Voltage</button>
+        <button onclick="toggleChart(7)">Wind Speed</button>
+    </div>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-        <canvas id="chart1" width="400" height="200"></canvas>
-        <canvas id="chart2" width="400" height="200"></canvas>
-        <canvas id="chart3" width="400" height="200"></canvas>
-        <canvas id="chart4" width="400" height="200"></canvas>
-        <canvas id="chart5" width="400" height="200"></canvas>
-        <canvas id="chart6" width="400" height="200"></canvas>
-        <canvas id="chart7" width="400" height="200"></canvas>
-        <canvas id="chart8" width="400" height="200"></canvas>
+    <div class="main-content">
+        <canvas id="chart1"></canvas>
+        <canvas id="chart2"></canvas>
+        <canvas id="chart3"></canvas>
+        <canvas id="chart4"></canvas>
+        <canvas id="chart5"></canvas>
+        <canvas id="chart6"></canvas>
+        <canvas id="chart7"></canvas>
+        <canvas id="chart8"></canvas>
     </div>
 
     <script>
@@ -41,6 +110,8 @@
                     }]
                 },
                 options: {
+                    responsive: true, // Umożliwia responsywność wykresów
+                    maintainAspectRatio: true, // Zachowanie proporcji wykresu
                     scales: {
                         x: { display: true },
                         y: { display: true }
@@ -63,22 +134,22 @@
             charts[1].data.datasets[0].data = data.map(d => d.humidity);
 
             charts[2].data.labels = labels;
-            charts[2].data.datasets[0].data = data.map(d => d.pressure);
+            charts[2].data.datasets[0].data = data.map(d => d.position);
 
             charts[3].data.labels = labels;
-            charts[3].data.datasets[0].data = data.map(d => d.light);
+            charts[3].data.datasets[0].data = data.map(d => d.speed);
 
             charts[4].data.labels = labels;
-            charts[4].data.datasets[0].data = data.map(d => d.sound);
+            charts[4].data.datasets[0].data = data.map(d => d.acceleration);
 
             charts[5].data.labels = labels;
-            charts[5].data.datasets[0].data = data.map(d => d.motion);
+            charts[5].data.datasets[0].data = data.map(d => d.efficiency);
 
             charts[6].data.labels = labels;
-            charts[6].data.datasets[0].data = data.map(d => d.vibration);
+            charts[6].data.datasets[0].data = data.map(d => d.voltage);
 
             charts[7].data.labels = labels;
-            charts[7].data.datasets[0].data = data.map(d => d.voltage);
+            charts[7].data.datasets[0].data = data.map(d => d.wind_speed);
 
             charts.forEach(chart => chart.update());
         }
@@ -87,13 +158,19 @@
         const charts = [
             createChart(document.getElementById('chart1').getContext('2d'), 'Temperature', 'rgba(75, 192, 192, 1)'),
             createChart(document.getElementById('chart2').getContext('2d'), 'Humidity', 'rgba(153, 102, 255, 1)'),
-            createChart(document.getElementById('chart3').getContext('2d'), 'Pressure', 'rgba(255, 159, 64, 1)'),
-            createChart(document.getElementById('chart4').getContext('2d'), 'Light Intensity', 'rgba(255, 206, 86, 1)'),
-            createChart(document.getElementById('chart5').getContext('2d'), 'Sound Levels', 'rgba(54, 162, 235, 1)'),
-            createChart(document.getElementById('chart6').getContext('2d'), 'Motion', 'rgba(255, 99, 132, 1)'),
-            createChart(document.getElementById('chart7').getContext('2d'), 'Vibration', 'rgba(201, 203, 207, 1)'),
-            createChart(document.getElementById('chart8').getContext('2d'), 'Voltage', 'rgba(75, 192, 192, 1)')
+            createChart(document.getElementById('chart3').getContext('2d'), 'Position', 'rgba(255, 159, 64, 1)'),
+            createChart(document.getElementById('chart4').getContext('2d'), 'Speed', 'rgba(255, 206, 86, 1)'),
+            createChart(document.getElementById('chart5').getContext('2d'), 'Acceleration', 'rgba(54, 162, 235, 1)'),
+            createChart(document.getElementById('chart6').getContext('2d'), 'Efficiency', 'rgba(255, 99, 132, 1)'),
+            createChart(document.getElementById('chart7').getContext('2d'), 'Voltage', 'rgba(201, 23, 207, 1)'),
+            createChart(document.getElementById('chart8').getContext('2d'), 'Wind speed', 'rgba(75, 192, 192, 1)')
         ];
+
+        // Funkcja do przełączania widoczności wykresów
+        function toggleChart(index) {
+            const chart = charts[index];
+            chart.canvas.style.display = chart.canvas.style.display === 'none' ? 'block' : 'none';
+        }
 
         // Aktualizacja danych co sekundę
         setInterval(() => updateCharts(charts), 1000);
