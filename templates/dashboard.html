@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>IoT Dashboard</h1>
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            return data;
+        }
+
+        async function updateChart(chart) {
+            const data = await fetchData();
+            const labels = data.map(d => d.timestamp);
+            const temperatures = data.map(d => d.temperature);
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = temperatures;
+            chart.update();
+        }
+
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: { display: true },
+                    y: { display: true }
+                }
+            }
+        });
+
+        setInterval(() => updateChart(chart), 1000);
+    </script>
+</body>
+</html>
