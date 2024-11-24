@@ -6,79 +6,89 @@
     <title>IoT Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Ogólny wygląd dla strony */
-        body {
-            font-family: Arial, sans-serif;
+        /* Ustawienie kontenera z przyciskami po lewej stronie */
+        .menu {
             display: flex;
-            height: 100vh;
-            margin: 0;
-        }
-
-        /* Styl dla menu bocznego */
-        .side-menu {
-            width: 200px;
-            background-color: #333;
-            color: white;
-            padding: 20px;
+            flex-direction: column;
             position: fixed;
-            height: 100%;
-            overflow-y: auto;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            margin-right: 20px;
         }
 
-        .side-menu button {
-            background-color: #444;
-            border: none;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-size: 16px;
-            width: 100%;
-            margin: 5px 0;
+        /* Styl przycisków */
+        .button-container button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 14px;
             cursor: pointer;
-        }
-
-        .side-menu button:hover {
-            background-color: #555;
-        }
-
-        /* Główna sekcja wykresów */
-        .main-content {
-            margin-left: 220px;
-            padding: 20px;
+            transition: background-color 0.3s ease;
             width: 100%;
         }
 
-        /* Styl dla wykresów */
-        canvas {
-            display: block;
-            margin: 20px 0;
-            width: 100%;
-            height: 400px;
+        .active-button {
+            background-color: #4BC0C0;
+            color: white;
         }
 
-        /* Zmiana liczby kolumn na urządzeniach o mniejszym ekranie */
+        .inactive-button {
+            background-color: #D3D3D3;
+            color: #808080;
+        }
+
+        /* Kontener z wykresami */
+        .charts-container {
+            margin-left: 220px; /* Aby pozostawić miejsce na przyciski */
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding-top: 20px;
+        }
+
+        /* Responsywność */
         @media (max-width: 768px) {
-            .main-content {
+            .menu {
+                top: 10%;
+                left: 10px;
+            }
+
+            .charts-container {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu {
+                top: 10%;
+                left: 10px;
+                width: 100%;
+            }
+
+            .charts-container {
                 margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="side-menu">
-        <h2>Projekt na Przemysł 4.0 Bartosz Kruszyński</h2>
-        <!-- Sekcja przycisków do włączania/wyłączania wykresów -->
-        <button onclick="toggleChart(0)">Temperature</button>
-        <button onclick="toggleChart(1)">Humidity</button>
-        <button onclick="toggleChart(2)">Position</button>
-        <button onclick="toggleChart(3)">Speed</button>
-        <button onclick="toggleChart(4)">Acceleration</button>
-        <button onclick="toggleChart(5)">Efficiency</button>
-        <button onclick="toggleChart(6)">Voltage</button>
-        <button onclick="toggleChart(7)">Wind Speed</button>
+    <h1>Projekt Przemysł 4.0 - Bartosz Kruszyński</h1>
+
+    <!-- Sekcja przycisków do włączania/wyłączania wykresów -->
+    <div class="menu">
+        <button id="btn0" onclick="toggleChart(0)" class="active-button">Temperature</button>
+        <button id="btn1" onclick="toggleChart(1)" class="active-button">Humidity</button>
+        <button id="btn2" onclick="toggleChart(2)" class="active-button">Position</button>
+        <button id="btn3" onclick="toggleChart(3)" class="active-button">Speed</button>
+        <button id="btn4" onclick="toggleChart(4)" class="active-button">Acceleration</button>
+        <button id="btn5" onclick="toggleChart(5)" class="active-button">Efficiency</button>
+        <button id="btn6" onclick="toggleChart(6)" class="active-button">Voltage</button>
+        <button id="btn7" onclick="toggleChart(7)" class="active-button">Wind Speed</button>
     </div>
 
-    <div class="main-content">
+    <!-- Kontener na wykresy -->
+    <div class="charts-container">
         <canvas id="chart1"></canvas>
         <canvas id="chart2"></canvas>
         <canvas id="chart3"></canvas>
@@ -169,7 +179,19 @@
         // Funkcja do przełączania widoczności wykresów
         function toggleChart(index) {
             const chart = charts[index];
+            const button = document.getElementById('btn' + index);
+
+            // Zmiana widoczności wykresu
             chart.canvas.style.display = chart.canvas.style.display === 'none' ? 'block' : 'none';
+
+            // Zmiana koloru przycisku
+            if (chart.canvas.style.display === 'none') {
+                button.classList.remove('active-button');
+                button.classList.add('inactive-button');
+            } else {
+                button.classList.remove('inactive-button');
+                button.classList.add('active-button');
+            }
         }
 
         // Aktualizacja danych co sekundę
