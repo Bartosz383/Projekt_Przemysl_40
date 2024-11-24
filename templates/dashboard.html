@@ -8,7 +8,18 @@
 </head>
 <body>
     <h1>IoT Dashboard</h1>
-    <canvas id="temperatureChart" width="400" height="200"></canvas>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <canvas id="chart1" width="400" height="200"></canvas>
+        <canvas id="chart2" width="400" height="200"></canvas>
+        <canvas id="chart3" width="400" height="200"></canvas>
+        <canvas id="chart4" width="400" height="200"></canvas>
+        <canvas id="chart5" width="400" height="200"></canvas>
+        <canvas id="chart6" width="400" height="200"></canvas>
+        <canvas id="chart7" width="400" height="200"></canvas>
+        <canvas id="chart8" width="400" height="200"></canvas>
+    </div>
+
     <script>
         async function fetchData() {
             const response = await fetch('/api/data');
@@ -16,38 +27,76 @@
             return data;
         }
 
-        async function updateChart(chart) {
-            const data = await fetchData();
-            const labels = data.map(d => d.timestamp);
-            const temperatures = data.map(d => d.temperature);
-
-            chart.data.labels = labels;
-            chart.data.datasets[0].data = temperatures;
-            chart.update();
+        function createChart(ctx, label, borderColor) {
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: label,
+                        data: [],
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { display: true },
+                        y: { display: true }
+                    }
+                }
+            });
         }
 
-        const ctx = document.getElementById('temperatureChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Temperature',
-                    data: [],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    x: { display: true },
-                    y: { display: true }
-                }
-            }
-        });
+        async function updateCharts(charts) {
+            const data = await fetchData();
 
-        setInterval(() => updateChart(chart), 1000);
+            // Zakładamy, że dane zawierają różne typy (temperature, humidity, itp.)
+            const labels = data.map(d => d.timestamp);
+
+            // Aktualizacja każdego wykresu
+            charts[0].data.labels = labels;
+            charts[0].data.datasets[0].data = data.map(d => d.temperature);
+
+            charts[1].data.labels = labels;
+            charts[1].data.datasets[0].data = data.map(d => d.humidity);
+
+            charts[2].data.labels = labels;
+            charts[2].data.datasets[0].data = data.map(d => d.pressure);
+
+            charts[3].data.labels = labels;
+            charts[3].data.datasets[0].data = data.map(d => d.light);
+
+            charts[4].data.labels = labels;
+            charts[4].data.datasets[0].data = data.map(d => d.sound);
+
+            charts[5].data.labels = labels;
+            charts[5].data.datasets[0].data = data.map(d => d.motion);
+
+            charts[6].data.labels = labels;
+            charts[6].data.datasets[0].data = data.map(d => d.vibration);
+
+            charts[7].data.labels = labels;
+            charts[7].data.datasets[0].data = data.map(d => d.voltage);
+
+            charts.forEach(chart => chart.update());
+        }
+
+        // Tworzenie wykresów
+        const charts = [
+            createChart(document.getElementById('chart1').getContext('2d'), 'Temperature', 'rgba(75, 192, 192, 1)'),
+            createChart(document.getElementById('chart2').getContext('2d'), 'Humidity', 'rgba(153, 102, 255, 1)'),
+            createChart(document.getElementById('chart3').getContext('2d'), 'Pressure', 'rgba(255, 159, 64, 1)'),
+            createChart(document.getElementById('chart4').getContext('2d'), 'Light Intensity', 'rgba(255, 206, 86, 1)'),
+            createChart(document.getElementById('chart5').getContext('2d'), 'Sound Levels', 'rgba(54, 162, 235, 1)'),
+            createChart(document.getElementById('chart6').getContext('2d'), 'Motion', 'rgba(255, 99, 132, 1)'),
+            createChart(document.getElementById('chart7').getContext('2d'), 'Vibration', 'rgba(201, 203, 207, 1)'),
+            createChart(document.getElementById('chart8').getContext('2d'), 'Voltage', 'rgba(75, 192, 192, 1)')
+        ];
+
+        // Aktualizacja danych co sekundę
+        setInterval(() => updateCharts(charts), 1000);
     </script>
 </body>
 </html>
