@@ -3,6 +3,7 @@ import random
 import json
 import paho.mqtt.client as mqtt
 import numpy as np
+from send_email import send_email  # Importujemy funkcję wysyłania e-maili
 
 # Ustawienia MQTT
 broker = "localhost"
@@ -61,6 +62,11 @@ try:
         payload = json.dumps(data)
         client.publish(topic, payload)
         print(f"Published: {payload}")
+
+        # Sprawdzenie, czy temperatura przekracza 21,5 stopnia
+        if data["temperature"] > 21.5:
+            send_email()  # Jeśli temperatura przekroczy 21,5 stopnia, wyślij e-mail
+
         t += 1  # Zwiększenie zmiennej czasu
         time.sleep(1)
 except KeyboardInterrupt:
