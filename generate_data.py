@@ -64,7 +64,7 @@ try:
         print(f"Published: {payload}")
 
         # Sprawdzenie, czy temperatura przekracza 21,5 stopnia
-        if data["temperature"] > 21.5:
+        if data["temperature"] > 31.5:
             send_email()  # Jeśli temperatura przekroczy 21,5 stopnia, wyślij e-mail
 
         t += 1  # Zwiększenie zmiennej czasu
